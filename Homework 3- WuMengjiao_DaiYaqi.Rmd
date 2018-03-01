@@ -1,0 +1,380 @@
+---
+title: "Homework 3"
+author: "Yaqi Dai Mengjiao Wu"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width = 6, fig.height = 3.5, fig.align = 'center')
+```
+# Question 1
+
+$$ln^c({\boldsymbol \Psi})=\sum_{i=1}^n\sum_{j=1}^m z_{ij} log\lbrace\pi_j\phi(y_i-{\bf X_i^T\beta^j};0,\sigma^2)\rbrace $$
+$$\begin{split}Q({\bf \Psi}|{\bf \Psi^{(k+1)}})& = E_z(ln^c({\bf \Psi}))\\
+& = \sum_zE[{\boldsymbol z}|{\boldsymbol y},{\boldsymbol \Psi^{(k+1)}}]lnE[{\boldsymbol y},{\boldsymbol z}|{\boldsymbol \Psi}]\\
+& = \sum_{j=1}^m\sum_{i=1}^nE[z_{ij}|{y_i,{\boldsymbol \Psi^{(k+1)}}}]lnE[z_{ij},{y_i|{\boldsymbol \Psi}}]
+\end{split} $$
+let $$\begin{split} p_{ij}^{(k+1)}&= E[z_{ij}|{y_i},{\boldsymbol \Psi^{(k+1)}}]\\
+&= \frac{\pi_j^{(k+1)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k+1)})}{\sum_{j=1}^m \pi_j^{(k+1)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k+1)})}
+\end{split} $$
+with $$\begin{split} E[z_{ij}, {y_i}|{\boldsymbol \Psi^{(k+1)}}]&=E[z_{ij}|{\boldsymbol \Psi^{(k+1)}}]E[{y_i}|z_{ij},{\boldsymbol \Psi^{(k+1)}}]\\
+&=\pi_j^{(k+1)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k+1)})\\
+\\
+Q({\boldsymbol \Psi}|{\boldsymbol \Psi^{(k+1)}})&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log(\pi_j^{(k+1)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k+1)}))\\
+&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}(log\pi_j^{(k+1)}+log(\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k+1)})))
+\end{split} $$
+$$\begin{split}Q({\boldsymbol \Psi}|{\boldsymbol \Psi^{(k+1)}})=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{\frac{d}{2}}\pi_j^{(k+1)})-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k+1)}|\\
+-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k+1)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})\\
+=I_1-\frac{1}{2}I_2-\frac{1}{2}I_3
+\end{split} $$
+where $$\begin{split}I_1&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{-0.5d}\pi_j^{(k+1)})\\
+I_2&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k+1)}|\\
+I_3&=\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k+1)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})
+\end{split} $$
+
+We can find that only $I_3$ contains $\beta_j^{(k+1)}$, which is a quardratic form.
+$$\begin{split}I_{3j}=\sum_{i=1}^{n} \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})
+\end{split} $$
+We only need to find $\beta_j^{(k+1)}$ to minimize each $I_{3j}$
+$$\begin{split}\frac{\partial{I_{3j}}}{\partial{\beta_j^{(k+1)}}}&=\frac{-2}{\sigma^{2(k+1)}}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})
+\end{split} $$
+Let it equals 0
+$$\begin{split}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})=0\\
+\\
+\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}y_i=\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}{\boldsymbol X_i^T}\beta_j^{(k+1)}\\
+\\
+\beta_j^{(k+1)}=(\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}{\boldsymbol X_i^T})^{-1}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}y_i
+\end{split} $$
+Then we find only $I_2,I_3$ contains $\sigma^{2(k)}$.
+$$\begin{split}I_2+I_3&=I_2=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k+1)}|+\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})\\
+\sigma^{2(k+1)}_j&=\frac{\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'}{\sum_{i=1}^{n}p_{ij}^{(k+1)}}\\
+\sigma_j^{2(k+1)}\sum_{i=1}^{n}p_{ij}^{(k+1)}&=\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'
+\end{split}$$
+We know that $\sigma^{(2k)}_j$ are same for all j, so we can have:
+$$\begin{split}
+\sum_{i=1}^{n}\sigma_j^{2(k+1)}p_{ij}^{(k+1)}&=\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'\\
+\\
+\sum_{j=1}^m\sum_{i=1}^{n}\sigma_j^{2(k+1)}p_{ij}^{(k+1)}&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'
+\end{split} $$
+For each i, we know that $\sum_{j=1}^mp_{ij}^{(k+1)}=1$, and $\sigma^{2(k+1)}_j = \sigma^{2(k+1)}$, so :
+$$\begin{split}\sigma^{2(k+1)}\sum_{i=1}^{n}1&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'\\
+n\sigma^{2(k+1)}&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'\\
+\sigma^{2(k+1)}&=\frac{\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})'}{n}
+\end{split} $$
+Finanlly, only$I_1$ contains $\pi_j^{(k+1)}$
+$$I_1=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{-0.5d}\pi_j^{(k+1)})$$
+$$I_1=\sum_{i=1}^{n}\sum_{j=1}^mp_{ij}^{(k+1)}log((2\pi)^{-0.5d} + \sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}\pi_j^{(k+1)}$$
+It suffieces to minimize $\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}\pi_j^{(k+1)}$.
+Let $P_j = \sum_{i=1}^np_{ij}$,$L(\pi_1^{(k+1,)},\pi_2^{(k+1,)},\ldots,\pi_m^{(k+1)})=\sum_{j=1}^m P_jln\pi_j^{(k+1)}-\lambda(\sum_{j=1}^m\pi_j^{(k+1)}-1)$ with $\lambda$ is a Lagrange multiplier.
+We only need to finde the solution for$L(\pi_1^{(k+1,)},\pi_2^{(k+1,)},\ldots,\pi_m^{(k+1,)})'=0$
+$$\pi_j^{(k+1)}=\frac{P_j}{\sum_{j=1}^mP_j} $$.
+For each i $\sum_{j=1}^mP_j=1$, then$$\pi_j^{(k+1)}=\frac{P_j}{n}=\frac{\sum_{i=1}^np_{ij}}{n}$$
+$$\begin{split}\end{split} $$
+
+# Question 2
+
+## Part (a)
+
+As Gamma function is $\Gamma(\alpha)=\int_{0}^\infty x^{\alpha-1}e^{-x}\,{\rm d}x$, the given equation can be expressed as,
+
+$$
+C\int_{0}^\infty(2x^{\theta-1}+x^{\theta-1/2})e^{-x}\,{\rm d}x=C(\int_{0}^\infty 2x^{\theta-1}e^{-x}\,{\rm d}x+\int_{0}^\infty x^{\theta-1/2}e^{-x}\,{\rm d}x)= C(2\Gamma(\theta)+\Gamma(\theta+\frac{1}{2}))=1
+$$
+
+Hence,
+
+$$
+C=\frac{1}{2\Gamma(\theta)+\Gamma(\theta+\frac{1}{2})}
+$$
+
+Therefore, $g$ cam be expressed as a mixture of Gamma distributions which is,
+
+$$
+\begin{aligned}
+g(x) &= \frac{1}{2\Gamma(\theta)+\Gamma(\theta+\frac{1}{2})}(2x^{\theta-1}e^{-x}+ x^{\theta-\frac{1}{2}}e^{-x}) \\
+&= \frac{1}{2\Gamma(\theta)+\Gamma(\theta+\frac{1}{2})}(2\Gamma(\theta)\cdot d(x;\theta,1)+\Gamma(\theta+\frac{1}{2})\cdot d(x;\theta+\frac{1}{2},1)) \\
+&= \frac{2\Gamma(\theta)}{2\Gamma(\theta)+\Gamma(\theta +\frac{1}{2})}\cdot d(x;\theta,1)+\frac{\Gamma(\theta+\frac{1}{2})}{2\Gamma(\theta)+\Gamma(\theta +\frac{1}{2})}\cdot d(x;\theta+\frac{1}{2},1)
+\end{aligned}
+$$
+
+where $d(x;\theta,1)$ is density function of ${\rm Gamma}(\theta,1)$ and $d(x;\theta+\frac{1}{2},1)$ is density function of ${\rm Gamma}(\theta+\frac{1}{2},1)$.\
+
+Consequently, $g(x)$ is a mixture of two Gamma distributions ${\rm Gamma}(\theta,1)$ and ${\rm Gamma}(\theta+\frac{1}{2},1)$, of which the weights are respectively,
+
+$$
+p_1=\frac{2\Gamma(\theta)}{2\Gamma(\theta)+\Gamma(\theta +\frac{1}{2})}\quad and\quad p_2=\frac{\Gamma(\theta+\frac{1}{2})}{2\Gamma(\theta)+\Gamma(\theta +\frac{1}{2})}
+$$
+
+
+
+## Part (b)
+
+By defining $\theta=3$, a sample of size $n=10000$ is generated. Kernel Density Estimation of $g$ from the sample and the true density are shown as,
+
+```{r, echo=FALSE}
+# density
+dmixgamma <- function(x, pi, alpha, beta) {
+  k <- length(pi)
+  n <- length(x)
+  rowSums(vapply(1:k, function(i) pi[i]*dgamma(x, alpha[i], beta[i]), numeric(n)))
+}
+
+# random generation
+rmixgamma <- function(n, pi, alpha, beta) {
+  k <- sample.int(length(pi), n, replace = TRUE, prob = pi)
+  rgamma(n, alpha[k], beta[k])
+}
+
+set.seed(123)
+
+theta <- 3
+weight <- 2*gamma(theta)/(2*gamma(theta)+gamma(theta+0.5))
+pi <- c(weight, 1-weight)
+alpha <- c(theta, theta+0.5)
+beta <- c(1, 1)
+sample <- rmixgamma(1e4, pi, alpha, beta)
+
+KDE <- density(sample)
+hist(sample, 100, freq = FALSE, main = "Kernel density estimation and True density", 
+     xlab = "Value", ylab = "Density")
+lines(KDE, col = "red")
+xx <- seq(0, 14, by = 0.001)
+lines(xx, dmixgamma(xx, pi, alpha, beta), col = "blue")
+legend("topright", c("KDE", "True density"), lty = c(1,1), col = c("red", "blue"))
+```
+
+
+
+## Part (c)
+
+Acoording to the rejection sampling, envelope function $\alpha g(x)$ should be firstly derived and $\alpha$ is calculated as,
+
+$$
+\alpha=\rm sup\frac{f(x)}{g(x)}=\rm sup\frac{\sqrt{4+x}}{2+\sqrt{x}}
+$$
+
+For programming, the value of $\alpha$ is chosen to be 1.2. Graphs of envelpoe function and target function are presented as,
+
+```{r, echo=FALSE}
+# Plot f(x) and 1.2g(x)
+theta <- 3
+x <- seq(0, 14, by = 0.001)
+f <- function(x) {sqrt(4+x)*x^(theta-1)*exp(-x)}
+g <- function(x) {(2*x^(theta-1)+x^(theta-0.5))*exp(-x)}
+plot(x, 1.2*g(x), type = 'l', main = "Target and Envelope function", 
+     ylab = "f(x) and 1.2g(x)", col = "red")
+lines(x, f(x), col = "black", lty = 1)
+legend("topright", legend = c("Envelope function 1.2g(x)", "Target function f(x)"), 
+       lty = c(1,1), col = c("red", "black"))
+```
+
+It can be found that $f(x)$ is absolutely located below the envelope function $1.2g(x)$, which is consistent with the requirement of rejection sampling.\
+
+The estimated density of a random sample generated by $f$ is shown as,
+
+```{r, echo=FALSE}
+# density
+dmixgamma <- function(x, pi, alpha, beta) {
+  k <- length(pi)
+  n <- length(x)
+  rowSums(vapply(1:k, function(i) pi[i]*dgamma(x, alpha[i], beta[i]), numeric(n)))
+}
+
+# random generation
+rmixgamma <- function(n, pi, alpha, beta) {
+  k <- sample.int(length(pi), n, replace = TRUE, prob = pi)
+  rgamma(n, alpha[k], beta[k])
+}
+
+set.seed(123)
+
+theta <- 3
+weight <- 2*gamma(theta)/(2*gamma(theta)+gamma(theta+0.5))
+pi <- c(weight, 1-weight)
+alpha <- c(theta, theta+0.5)
+beta <- c(1, 1)
+sample <- rmixgamma(1e4, pi, alpha, beta)
+
+f <- function(x) {sqrt(4+x)*x^(theta-1)*exp(-x)}
+g <- function(x) {(2*x^(theta-1)+x^(theta-0.5))*exp(-x)}
+simu <- function (x) {
+  u <- runif(1, 0, g(x))
+  if (any(u < (1/1.2)*f(x)))
+      return(x)
+  }
+
+simu.list <- sapply(sample, simu)
+simu.result <- matrix(unlist(simu.list), nr = 1) 
+hist(simu.result, 100, freq = FALSE, main = "Rejection Sampling", xlab = "Value")
+estimation <- density(simu.result)
+lines(estimation, col = "red")
+```
+
+
+
+# Question 3
+
+## Part (a)
+
+In this question, rejection sampling method is used so that envelope function should be initially found. According to the requirement, mixture of Beta distributions $g(x)$ is the instrumental function. So, $g(x)$ can be directly seen as the envelope function.\
+
+Based on $f(x)$, mixture of Beta distributions can be specified as:
+since,
+
+$$
+f(x)\propto\frac{x^{\theta-1}}{1+x^2}+\sqrt{2+x^2}(1-x)^{\beta-1}
+$$
+
+it can be obtained that when $0<x<1$,
+
+$$
+\frac{x^{\theta-1}}{1+x^2}=\frac{1}{1+x^2}\cdot x^{\theta-1}(1-x)^{1-1}= \frac{B(\theta,1)}{1+x^2}\cdot d(x;\theta,1)<B(\theta,1)\cdot d(x;\theta,1)
+$$
+
+$$
+\sqrt{2+x^2}(1-x)^{\beta-1}=\sqrt{2+x^2}\cdot x^{1-1}(1-x)^{\beta-1}= \sqrt{2+x^2}B(1,\beta)\cdot d(x;1,\beta)<2B(1,\beta)\cdot d(x;1,\beta)
+$$
+
+where $d(x;\theta,1)$ is density function of ${\rm Beta}(\theta,1)$ and $d(x;1,\beta)$ is density function of ${\rm Beta}(1,\beta)$.\
+
+Hence, $g(x)$ is expressed as,
+
+$$
+g(x)=B(\theta,1)\cdot d(x;\theta,1)+2B(1,\beta)\cdot d(x;1,\beta)=x^{\theta-1}+2(1-x)^{\beta-1}
+$$
+
+and, 
+
+$$
+g_1(x)=d(x;\theta,1)=\frac{x^{\theta-1}}{B(\theta,1)}\quad and\quad g_2(x)=d(x;1,\beta) =\frac{(1-x)^{\beta-1}}{B(1,\beta)}
+$$
+
+$$
+p_1=B(\theta,1)\quad and\quad p_2=2B(1,\beta)
+$$
+
+Graphs of envelpoe function and target function are presented as,
+
+```{r, echo=FALSE}
+# Plot f(x) and g(x)
+
+theta <- 2
+beta <- 2
+x <- seq(0, 1, by = 0.0001)
+f <- function(x) {x^(theta-1)/(1+x^2)+sqrt(2+x^2)*(1-x)^(beta-1)}
+g <- function(x) {x^(theta-1)+2*(1-x)^(beta-1)}
+plot(x, g(x), ylim = c(0,3), type = 'l', main = "Target and Envelope function", 
+     ylab = "f(x) and g(x)", col = "red")
+lines(x, f(x), col = "black", lty = 1)
+legend("topright", legend = c("Envelope function g(x)", "Target function f(x)"), 
+       lty = c(1,1), col = c("red", "black"))
+```
+
+It can be found that $f(x)$ is absolutely located below the envelope function $g(x)$, which is consistent with the requirement of rejection sampling.\
+
+By defining $\theta=2$ and $\beta=2$, the estimated density of a random sample generated by $f$ is shown as,
+```{r, echo=FALSE}
+# random generation
+rmixbeta <- function(n, pi, alpha, beta) {
+  k <- sample.int(length(pi), n, replace = TRUE, prob = pi)
+  rbeta(n, alpha[k], beta[k])
+}
+
+set.seed(123)
+
+theta <- 2
+vbeta <- 2
+pi <- c(beta(theta,1), 2*beta(1,vbeta))
+alpha <- c(theta, 1)
+beta <- c(1, vbeta)
+sample <- rmixbeta(1e4, pi, alpha, beta)
+
+f <- function(x) {x^(theta-1)/(1+x^2)+sqrt(2+x^2)*(1-x)^(beta-1)}
+g <- function(x) {x^(theta-1)+2*(1-x)^(beta-1)}
+simu <- function (x) {
+  u <- runif(1, 0, g(x))
+  if (any(u < f(x)))
+    return(x)
+}
+
+simu.list <- sapply(sample, simu)
+simu.result <- matrix(unlist(simu.list), nr = 1) 
+hist(simu.result, 100, freq = FALSE, main = "Rejection Sampling", xlab = "Value")
+estimation <- density(simu.result)
+lines(estimation, col = "red")
+```
+
+## part(b)
+
+When dealing with the two components of f(x), we first define $q_1(x)=\frac{x^{\theta - 1}}{1+x^2}$,$q_2(x)=\sqrt{(2+x^2)}(1-x)^{\beta-1}$. So we can have $f(x)\propto q_1(x)+q_2(x)$.
+
+Then we define$g_1(x)=2*x^{\theta - 1}$ and $g_2(x)=2*(1-x)^{\beta-1}$, we can know that $g_1(x),g_2(x)$ is the density function of $Beta(\theta,1)$ and $Beta(1,\beta)$.
+
+To find the envelope functions, we need to find $\alpha_1,\alpha_2$ that can make $q_1(x)\leq\alpha_1g_1(x)$ and $q_2(x)\leq\alpha_2g_2(x)$.
+$\alpha_1\geq sup\frac{q_1(x)}{g_1(x)}=0.5$ and $\alpha_2\geq sup\frac{q_2(x)}{g_2(x)}=0.5\sqrt2$.
+So we define $\alpha_1 = 1.2, \alpha_2= 1.5$, and also define  $\theta=2$ and $\beta=2$ as in part (a).
+Graphs of envelpoe function and target function are presented as,
+```{r echo=FALSE}
+theta <- 2
+x <- seq(0, 1, by = 0.0001)
+f <- function(x) {x^(theta-1)/(1+x^2)}
+g <- function(x) {2*x^(theta-1)}
+plot(x, g(x), ylim = c(0,2), type = 'l', main = "Target and Envelope function", 
+     ylab = "f(x) and g(x)", col = "red")
+lines(x, f(x), col = "black", lty = 1)
+legend("topleft", legend = c("Envelope function g1(x)", "Target function q1(x)"), 
+       lty = c(1,1), col = c("red", "black"))
+```
+```{r echo=FALSE}
+beta <- 2
+x <- seq(0, 1, by = 0.0001)
+f <- function(x) {sqrt(2+x^2)*(1-x)^(beta-1)}
+g <- function(x) {2*(1-x)^(beta-1)}
+plot(x, g(x), ylim = c(0,2), type = 'l', main = "Target and Envelope function", 
+     ylab = "f(x) and g(x)", col = "red")
+lines(x, f(x), col = "black", lty = 1)
+legend("topright", legend = c("Envelope function g(x)", "Target function f(x)"), 
+       lty = c(1,1), col = c("red", "black"))
+```
+
+The estimated density of a random sample generated by $f$ is shown as
+
+```{r echo=FALSE}
+my.alfa <- c(1.2, 1.5)
+my.theta <- 2
+my.beta <- 2
+n <- 10000
+
+u1 <- function(x){
+  1/(2.4*(1 + x^2))
+}
+u2 <- function(y){
+  sqrt(2 + y^2)/3
+}
+
+k <- sample.int(length(my.alfa), 10000, replace = TRUE, prob = my.alfa)
+alfa1 <- c(my.theta, 1)
+beta1 <- c(1, my.beta)
+sample <- rbeta(n, alfa1[k], beta1[k])
+
+rejsample <- function(x,y){
+  if(any(x == 1)){
+    u <- runif(1, 0, 1)
+    if(any(u < u1(y)))
+      return(y)
+  }
+  else{
+    u <- runif(1, 0, 1)
+    if(any(u < u2(y)))
+      return(y)
+  }
+}
+
+rejsample.list <- mapply(rejsample, k, sample)
+rejsample.result <- matrix(unlist(rejsample.list), nr = 1) 
+hist(rejsample.result, 100, freq = FALSE, xlab = "Value", main = "Rejection Sampling")
+estimation <- density(rejsample.result)
+lines(estimation, col = "red")
+
+```
+

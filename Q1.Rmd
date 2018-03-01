@@ -1,0 +1,70 @@
+---
+title: "HW 3"
+author: "Yaqi Dai Mengjiao Wu"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+$$ln^c({\boldsymbol \Psi})=\sum_{i=1}^n\sum_{j=1}^m z_{ij} log\lbrace\pi_j\phi(y_i-{\bf X_i^T\beta^j};0,\sigma^2)\rbrace $$
+$$\begin{split}Q({\bf \Psi}|{\bf \Psi^{(k)}})& = E_z(ln^c({\bf \Psi}))\\
+& = \sum_zE[{\boldsymbol z}|{\boldsymbol y},{\boldsymbol \Psi^{(k)}}]lnE[{\boldsymbol y},{\boldsymbol z}|{\boldsymbol \Psi}]\\
+& = \sum_{j=1}^m\sum_{i=1}^nE[z_{ij}|{y_i,{\boldsymbol \Psi_{(k)}}}]lnE[z_{ij},{y_i|{\boldsymbol \Psi}}]
+\end{split} $$
+
+let $$\begin{split} p_{ij}^{(k+1)}&= E[z_{ij}|{y_i},{\boldsymbol \Psi^{(k)}}]\\
+&= \frac{\pi_j^{(k)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k)})}{\sum_{j=1}^m \pi_j^{(k)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k)})}
+\end{split} $$
+with $$\begin{split} E[z_{ij}, {y_i}|{\boldsymbol \Psi^{(k)}}]&=E[z_{ij}|{\boldsymbol \Psi^{(k)}}]E[{y_i}|z_{ij},{\boldsymbol \Psi^{(k)}}]\\
+&=\pi_j^{(k)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k)})\\
+\\
+Q({\boldsymbol \Psi}|{\boldsymbol \Psi^{(k)}})&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log(\pi_j^{(k)}\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k)}))\\
+&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}(log\pi_j^{(k)}+log(\phi(y_i-{\bf X_i^T\beta_j^{(k+1)}};0,\sigma^{2(k)})))
+\end{split} $$
+$$\begin{split}Q({\boldsymbol \Psi}|{\boldsymbol \Psi^{(k)}})&=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{-0.5d}\pi_j^{(k+1)})-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k)}|-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})\\
+&=I_1-\frac{1}{2}I_2-\frac{1}{2}I_3
+\end{split} $$
+where $$I_1=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{-0.5d}\pi_j^{(k+1)})$$,$$I_2=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k)}|$$,$$I_3=\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})$$
+
+We can find that only $I_3$ contains $\beta_j^{(k+1)}$, which is a quardratic form.
+$$\begin{split}I_{3j}=\sum_{i=1}^{n} \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j^{(k+1)}})
+\end{split} $$
+We only need to find $\beta_j^{(k+1)}$ to minimize each $I_{3j}$
+$$\begin{split}\frac{\partial{I_{3j}}}{\partial{\beta_j^{(k+1)}}}&=\frac{-2}{\sigma^{2(k+1)}}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})
+\end{split} $$
+Let it equals 0
+$$\begin{split}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}(y_i-{\boldsymbol X_i^T}\beta_j^{(k+1)})=0\\
+\\
+\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}y_i=\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}{\boldsymbol X_i^T}\beta_j^{(k+1)}\\
+\\
+\beta_j^{(k+1)}=(\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}{\boldsymbol X_i^T})^{-1}\sum_{i=1}^np_{ij}^{(k+1)}{\boldsymbol X_i}y_i
+\end{split} $$
+
+
+Then we find only $I_2,I_3$ contains $\sigma^{2(k)}$.
+$$\begin{split}I_2+I_3&=I_2=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log|\sigma^{2(k+1)}|+\sum_{i=1}^{n}\sum_{j=1}^m \frac{p_{ij}^{(k+1)}}{\sigma^{2(k)}}({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j})'({y_i}-{\boldsymbol X_i^T}{\boldsymbol \beta_j})\\
+\sigma^{2(k+1)}_j&=\frac{\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'}{\sum_{i=1}^{n}p_{ij}^{(k+1)}}\\
+\sigma_j^{2(k+1)}\sum_{i=1}^{n}p_{ij}^{(k+1)}&=\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'
+\end{split}
+$$
+We know that $\sigma^{(2k)}_j$ are same for all j, so we can have:
+$$\begin{split}
+\sum_{i=1}^{n}\sigma_j^{2(k+1)}p_{ij}^{(k+1)}&=\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'\\
+\sum_{j=1}^m\sum_{i=1}^{n}\sigma_j^{2(k+1)}p_{ij}^{(k+1)}&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'
+\end{split} $$
+For each i, we know that $\sum_{j=1}^mp_{ij}^{(k+1)}=1 $, and $\sigma^{2(k+1)}_j = \sigma^{2(k+1)}  $, so :
+$$\begin{split}\sum_{i=1}^{n}\sigma^{2(k+1)}&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'\\
+n\sigma^{2(k+1)}&=\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'\\
+\sigma^{2(k+1)}&=\frac{\sum_{j=1}^m\sum_{i=1}^{n}p_{ij}^{(k+1)}(y_i-{\boldsymbol X_i^T}\beta_j)(y_i-{\boldsymbol X_i^T}\beta_j)'}{n}
+\end{split} $$
+Finanlly, only$I_1$ contains $\pi_j^{(k+1)}$
+$$I_1=\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}log((2\pi)^{-0.5d}\pi_j^{(k+1)})$$
+$$I_1=\sum_{i=1}^{n}\sum_{j=1}^mp_{ij}^{(k+1)}log((2\pi)^{-0.5d} + \sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}\pi_j^{(k+1)}$$
+It suffieces to minimize $\sum_{i=1}^{n}\sum_{j=1}^m p_{ij}^{(k+1)}\pi_j^{(k+1)}$.
+Let $P_j = \sum_{i=1}^np_{ij} $$L(\pi_1^{(k+1,)},\pi_2^{(k+1,)},\ldots,\pi_m^{(k+1)})=\sum_{j=1}^m P_jln\pi_j^{(k+1)}-\lambda(\sum_{j=1}^m\pi_j^{(k+1)}-1) $ with $\lambda$ is a Lagrange multiplier.
+We only need to finde the solution for$L(\pi_1^{(k+1,)},\pi_2^{(k+1,)},\ldots,\pi_m^{(k+1,)})'=0$
+$$\pi_j^{(k+1)}=\frac{P_j}{\sum_{j=1}^mP_j} $$.
+For each i$\sum_{j=1}^mP_j=1$, then$$\pi_j^{(k+1)}=\frac{P_j}{n}=\frac{\sum_{i=1}^np_{ij}}{n}$$
+$$\begin{split}\end{split} $$
